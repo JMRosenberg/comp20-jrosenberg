@@ -4,6 +4,23 @@
   
   <head>
     <title>Fecesbook</title>
+    <script>
+      function add_status(){
+        stats = document.getElementById("status");
+        existing = stats.innerHTML;
+        input = document.getElementById("msg");
+        message = input.value; /* get the message */
+        input.value = ""; /* clear the input box */
+        now = new Date();
+        mins = "0" + now.getMinutes();
+        mins = mins.slice(-2);
+        datestring = (now.getMonth() + 1) + "/" + now.getDate() + "/"
+            + now.getFullYear() + " " + now.getHours() + ":"
+            + mins + " - ";
+        wholestat = "<p>" + datestring + message + "</p>";
+        stats.innerHTML = wholestat + existing;
+      }
+    </script>
   </head>
   
   <body>
@@ -19,7 +36,7 @@
       </ul>
     </div>
     <h2 id="fullname">Barney Gumble</h2>
-    <h3>What are you thinking about? <input type="text" id="msg" name="msg" size="30" /></h3>
+    <h3>What are you thinking about? <input type="text" id="msg" name="msg" size="30" onchange="add_status()" /></h3>
     <h3>Updates</h3>
     <div id="status">
     </div>
