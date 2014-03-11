@@ -48,13 +48,15 @@ function displayAll()
 	myColor = '#FF0000';
     }
     
-    // Create a marker
+    // Create markers
+    var image = 'train.png';
     var markers = [];
     var lineStops = [];
     for(tstop in myLine){
 	marker = new google.maps.Marker({
 	    position: new google.maps.LatLng(myLine[tstop].lat, myLine[tstop].lng),
-	    title: "<h3>" + myLine[tstop].station + "</h3>"
+	    title: "<h3>" + myLine[tstop].station + "</h3>",
+	    icon: image
 	});
 	marker.setMap(map);
 	markers.push(marker);
