@@ -7,7 +7,7 @@ function init()
     
     // Set up map
     var myOptions = {
-	zoom: 11, // The larger the zoom number, the bigger the zoom
+	zoom: 12, // The larger the zoom number, the bigger the zoom
 	center: startpoint,
 	mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -32,22 +32,38 @@ function displayAll()
 	return;
     }
     
+    var myLine;
+    var scheduleData = JSON.parse(xhr.responseText);
+
+    if(scheduleData.line == "orange"){
+	myLine = orangeLine;
+	myColor = '#FF8800';
+    }
+    else if(scheduleData.line == "blue"){
+	myLine = blueLine;
+	myColor = '#0000FF';
+    }
+    else{
+	myLine = redLine;
+	myColor = '#FF0000';
+    }
+    
     // Create a marker
     var markers = [];
     var lineStops = [];
-    for(tstop in redLine){
+    for(tstop in myLine){
 	marker = new google.maps.Marker({
-	    position: new google.maps.LatLng(redLine[tstop].lat, redLine[tstop].lng),
-	    title: "<h3>" + redLine[tstop].station + "</h3>"
+	    position: new google.maps.LatLng(myLine[tstop].lat, myLine[tstop].lng),
+	    title: "<h3>" + myLine[tstop].station + "</h3>"
 	});
 	marker.setMap(map);
 	markers.push(marker);
-	lineStops[tstop] = new google.maps.LatLng(redLine[tstop].lat, redLine[tstop].lng);
+	lineStops[tstop] = new google.maps.LatLng(myLine[tstop].lat, myLine[tstop].lng);
     }
     var flightPath = new google.maps.Polyline({
 	path: lineStops,
 	geodesic: true,
-	strokeColor: '#FF0000',
+	strokeColor: myColor,
 	strokeOpacity: 1.0,
 	strokeWeight: 2
     });
@@ -57,7 +73,7 @@ function displayAll()
     var infowindows = [];
     for(eachstop in markers){
 	infowindows[eachstop] = new google.maps.InfoWindow({
-	    content: redLine[eachstop].station
+	    content: myLine[eachstop].station
 	});
 	infoListen(markers[eachstop], infowindows[eachstop]);
     }
@@ -89,36 +105,36 @@ redLine = [{"station": "Alewife", "lat": 42.395428, "lng": -71.142483},
 	   {"station": "Shawmut", "lat": 42.29313, "lng": -71.0657},
 	   {"station": "Ashmont", "lat": 42.28465, "lng": -71.0645}
 	  ];
-blueLine = [{"station": "Wonderland", "lat": 0 , "lng": 0},
-	    {"station": "Revere Beach", "lat": 0 , "lng": 0},
-	    {"station": "Beachmont", "lat": 0 , "lng": 0},
-	    {"station": "Suffolk Downs", "lat": 0 , "lng": 0},
-	    {"station": "Orient Heights", "lat": 0 , "lng": 0},
-	    {"station": "Wood Island", "lat": 0 , "lng": 0},
-	    {"station": "Airport", "lat": 0 , "lng": 0},
-	    {"station": "Maverick", "lat": 0 , "lng": 0},
-	    {"station": "Aquarium", "lat": 0 , "lng": 0},
-	    {"station": "State Street", "lat": 0 , "lng": 0},
-	    {"station": "Government Center", "lat": 0 , "lng": 0},
-	    {"station": "Bowdoin", "lat": 0 , "lng": 0}
+blueLine = [{"station": "Wonderland", "lat": 42.41342, "lng": -70.9916},
+	    {"station": "Revere Beach", "lat": 42.40784, "lng": -70.9925},
+	    {"station": "Beachmont", "lat": 42.39754, "lng": -70.9923},
+	    {"station": "Suffolk Downs", "lat": 42.3905, "lng": -70.9971},
+	    {"station": "Orient Heights", "lat": 42.38687, "lng": -71.0047},
+	    {"station": "Wood Island", "lat": 42.37964, "lng": -71.0229},
+	    {"station": "Airport", "lat": 42.37426, "lng": -71.0304},
+	    {"station": "Maverick", "lat": 42.36912, "lng": -71.0395},
+	    {"station": "Aquarium", "lat": 42.35978, "lng": -71.0517},
+	    {"station": "State Street", "lat": 42.35898, "lng": -71.0576},
+	    {"station": "Government Center", "lat": 42.35971, "lng": -71.0592},
+	    {"station": "Bowdoin", "lat": 42.36137, "lng": -71.062}
 	   ];
-orangeLine = [{"station": "Oak Grove", "lat": 0 , "lng": 0},
-	      {"station": "Malden Center", "lat": 0 , "lng": 0},
-	      {"station": "Wellington", "lat": 0 , "lng": 0},
-	      {"station": "Sullivan Square", "lat": 0 , "lng": 0},
-	      {"station": "Community College", "lat": 0 , "lng": 0},
-	      {"station": "North Station", "lat": 0 , "lng": 0},
-	      {"station": "Haymarket", "lat": 0 , "lng": 0},
-	      {"station": "State Street", "lat": 0 , "lng": 0},
-	      {"station": "Downtown Crossing", "lat": 0 , "lng": 0},
-	      {"station": "Chinatown", "lat": 0 , "lng": 0},
-	      {"station": "Tufts Medical", "lat": 0 , "lng": 0},
-	      {"station": "Back Bay", "lat": 0 , "lng": 0},
-	      {"station": "Mass Ave", "lat": 0 , "lng": 0},
-	      {"station": "Ruggles", "lat": 0 , "lng": 0},
-	      {"station": "Roxbury Crossing", "lat": 0 , "lng": 0},
-	      {"station": "Jackson Square", "lat": 0 , "lng": 0},
-	      {"station": "Stony Brook", "lat": 0 , "lng": 0},
-	      {"station": "Green Street", "lat": 0 , "lng": 0},
-	      {"station": "Forest Hills", "lat": 0 , "lng": 0}
+orangeLine = [{"station": "Oak Grove", "lat": 42.43668, "lng": -71.0711},
+	      {"station": "Malden Center", "lat": 42.42663, "lng": -71.0741},
+	      {"station": "Wellington", "lat": 42.40237, "lng": -71.0771},
+	      {"station": "Sullivan", "lat": 42.38398, "lng": -71.077},
+	      {"station": "Community College", "lat": 42.37362, "lng": -71.0695},
+	      {"station": "North Station", "lat": 42.36558, "lng": -71.0613},
+	      {"station": "Haymarket", "lat": 42.36302, "lng": -71.0583},
+	      {"station": "State Street", "lat": 42.35898, "lng": -71.0576},
+	      {"station": "Downtown Crossing", "lat": 42.35552, "lng": -71.0602},
+	      {"station": "Chinatown", "lat": 42.35255, "lng": -71.0628},
+	      {"station": "Tufts Medical", "lat": 42.34966, "lng": -71.0639},
+	      {"station": "Back Bay", "lat": 42.34735, "lng": -71.0757},
+	      {"station": "Mass Ave", "lat": 42.34151, "lng": -71.0834},
+	      {"station": "Ruggles", "lat": 42.33638, "lng": -71.089},
+	      {"station": "Roxbury Crossing", "lat": 42.3314, "lng": -71.0955},
+	      {"station": "Jackson Square", "lat": 42.32313, "lng": -71.0996},
+	      {"station": "Stony Brook", "lat": 42.31706, "lng": -71.1042},
+	      {"station": "Green Street", "lat": 42.31053, "lng": -71.1074},
+	      {"station": "Forest Hills", "lat": 42.30052, "lng": -71.1137}
 	     ];
