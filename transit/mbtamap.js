@@ -5,7 +5,7 @@ function init()
     
     // Set up map
     var myOptions = {
-	zoom: 10, // The larger the zoom number, the bigger the zoom
+	zoom: 12, // The larger the zoom number, the bigger the zoom
 	center: landmark,
 	mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -15,6 +15,7 @@ function init()
     
     // Create a marker
     var marker = [];
+    var lineStops = [];
     for(tstop in redLine){
 	marker[tstop] = new google.maps.Marker({
 	    position: new google.maps.LatLng(redLine[tstop].lat, redLine[tstop].lng),
@@ -25,8 +26,16 @@ function init()
 	    infowindow.open(map, marker[tstop]);
 	});
 	marker[tstop].setMap(map);
+	lineStops[tstop] = new google.maps.LatLng(redLine[tstop].lat, redLine[tstop].lng);
     }
-    console.log(marker);
+    var flightPath = new google.maps.Polyline({
+	path: lineStops,
+	geodesic: true,
+	strokeColor: '#FF0000',
+	strokeOpacity: 1.0,
+	strokeWeight: 2
+    });
+    flightPath.setMap(map);
     
     // This is a global info window...
     var infowindow = new google.maps.InfoWindow();
