@@ -1,17 +1,36 @@
+var xhr;
+
 function init()
 {
     // Faneuil Hall
-    var landmark = new google.maps.LatLng(42.3599611, -71.0567528);
+    var startpoint = new google.maps.LatLng(42.3599611, -71.0567528);
     
     // Set up map
     var myOptions = {
-	zoom: 12, // The larger the zoom number, the bigger the zoom
-	center: landmark,
+	zoom: 11, // The larger the zoom number, the bigger the zoom
+	center: startpoint,
 	mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     
     // Create the map in the "map_canvas" <div>
-    var map = new google.maps.Map(document.getElementById("mbtaMap"), myOptions);
+    map = new google.maps.Map(document.getElementById("mbtaMap"), myOptions);
+    
+    // Get data from Rodeo
+    xhr = new XMLHttpRequest();
+    xhr.open("get", "http://mbtamap.herokuapp.com/mapper/rodeo.json", true);
+    xhr.onreadystatechange = displayAll;
+    xhr.send(null);
+}
+
+function displayAll()
+{
+    if(xhr.readyState != 4){
+	return;
+    }
+    if(xhr.status == 500){
+	alert("Error from Rodeo");
+	return;
+    }
     
     // Create a marker
     var markers = [];
@@ -33,7 +52,7 @@ function init()
 	strokeWeight: 2
     });
     flightPath.setMap(map);
-
+    
     // This is a global info window...
     var infowindows = [];
     for(eachstop in markers){
