@@ -14,18 +14,15 @@ function init()
     var map = new google.maps.Map(document.getElementById("mbtaMap"), myOptions);
     
     // Create a marker
-    var marker = [];
+    var markers = [];
     var lineStops = [];
     for(tstop in redLine){
-	marker[tstop] = new google.maps.Marker({
+	marker = new google.maps.Marker({
 	    position: new google.maps.LatLng(redLine[tstop].lat, redLine[tstop].lng),
 	    title: "<h3>" + redLine[tstop].station + "</h3>"
 	});
-	google.maps.event.addListener(marker[tstop], 'click', function(){
-	    infowindow.setContent(marker[tstop].title);
-	    infowindow.open(map, marker[tstop]);
-	});
-	marker[tstop].setMap(map);
+	marker.setMap(map);
+	markers.push(marker);
 	lineStops[tstop] = new google.maps.LatLng(redLine[tstop].lat, redLine[tstop].lng);
     }
     var flightPath = new google.maps.Polyline({
@@ -36,15 +33,22 @@ function init()
 	strokeWeight: 2
     });
     flightPath.setMap(map);
-    
+
     // This is a global info window...
-    var infowindow = new google.maps.InfoWindow();
-    
-    // Open info window on click of marker
-    /*google.maps.event.addListener(marker, 'click', function() {
-	infowindow.setContent(marker.title);
-	infowindow.open(map, marker);
-    });*/
+    var infowindows = [];
+    for(eachstop in markers){
+	infowindows[eachstop] = new google.maps.InfoWindow({
+	    content: redLine[eachstop].station
+	});
+	infoListen(markers[eachstop], infowindows[eachstop]);
+    }
+}
+
+// To open infowindows onClick
+function infoListen(marker, infowin){
+    google.maps.event.addListener(marker, 'click', function(){
+	infowin.open(marker.get('map'), marker);
+    });
 }
 
 // Arrays with all the stations
