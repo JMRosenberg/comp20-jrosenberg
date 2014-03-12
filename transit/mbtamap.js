@@ -79,13 +79,84 @@ function displayAll()
 	});
 	infoListen(markers[eachstop], infowindows[eachstop]);
     }
+
+    mylat = 42.4137513;
+    mylng = -71.1137399; /*** TEMPORARY ***/
+    myloc = new google.maps.LatLng(mylat, mylng);
+
+    // Geolocation
+    if(navigator.geolocation) {
+	console.log("YES");
+	navigator.geolocation.getCurrentPosition(function(position) {
+	    console.log("Next");
+	    mylat = position.coords.latitude;
+	    mylng = position.coords.longitude;
+	    showMe();
+	});
+    }
+    else {
+	alert("Geolocation not supported");
+    }
+
+    /*** TEMPORARY ***/
+    memarker = new google.maps.Marker({
+	position: new google.maps.LatLng(mylat, mylng),
+	title: "'Sup?"
+    });
+    memarker.setMap(map);
+
+    // Display closest stop
+    closestDist = 999999999;
+    closestInd = -1;
+    for(stats in myLine){
+	var R = 6371;
+	var x1 = mylat - myLine[stats].lat;
+	var dLat = x1.toRad();
+	var x2 = mylng - myLine[stats].lng;
+	var dLng = x2.toRad();
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+	    Math.cos(mylat.toRad()) * Math.cos(myLine[stats].lat.toRad()) *
+	    Math.sin(dLng/2) * Math.sin(dLng/2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+	var d = R * c;
+	if(d < closestDist){
+	    closestDist = d;
+	    closestInd = stats;
+	}
+    }
+    // Draw a line
+    var endPts = [myloc, new google.maps.LatLng(myLine[closestInd].lat, myLine[closestInd].lng)];
+    var closePath = new google.maps.Polyline({
+	path: endPts,
+	geodesic: true,
+	strokeColor: '#000000',
+	strokeOpacity: 1.0,
+	strokeWeight: 2
+    });
+    closePath.setMap(map);
+}
+
+// For Geolocation
+function showMe() {
+    console.log("Got Here");
+    me = new google.maps.LatLng(mylat, mylng);
+    map.panTo(me);
+    memarker = new google.maps.Marker({
+	position: me,
+	title: "Hello!"
+    });
+    memarker.setMap(map);
 }
 
 // To open infowindows onClick
-function infoListen(marker, infowin){
+function infoListen(marker, infowin) {
     google.maps.event.addListener(marker, 'click', function(){
 	infowin.open(marker.get('map'), marker);
     });
+}
+
+Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
 }
 
 // Arrays with all the stations
