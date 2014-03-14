@@ -1,7 +1,22 @@
 var xhr;
+mylat = 42.4137513;
+mylng = -71.1137399;
+myloc = new google.maps.LatLng(mylat, mylng);
 
 function init()
 {
+    // Set Up Geolocation
+    if(navigator.geolocation) {
+	navigator.geolocation.getCurrentPosition(function(position) {
+	    mylat = position.coords.latitude;
+	    mylng = position.coords.longitude;
+	    showMe();
+	});
+    }
+    else {
+	alert("Geolocation not supported");
+    }
+    
     // Faneuil Hall
     var startpoint = new google.maps.LatLng(42.3599611, -71.0567528);
     
@@ -71,20 +86,37 @@ function displayAll()
     });
     flightPath.setMap(map);
     
-    // This is a global info window...
     var infowindows = [];
     for(eachstop in markers){
+	var contentstring = "<h3>" + myLine[eachstop].station + "</h3>" + 
+	    "<table><tr><th>Train</th><th>Destination</th><th>Time</th>" + 
+	    "</tr>";
+	for(eachtrain in scheduleData.schedule){
+	    for(preds in scheduleData.schedule[eachtrain].Predictions){
+		if(scheduleData.schedule[eachtrain].Predictions[preds].Stop
+		   == myLine[eachstop].station){
+		    contentstring += "<tr><td>" + 
+			scheduleData.schedule[eachtrain].TripID + "</td><td>" +
+			scheduleData.schedule[eachtrain].Destination + 
+			"</td><td>" + 
+			scheduleData.schedule[eachtrain].Predictions[preds].Seconds
+			+ "</td></tr>";
+		}
+	    }
+	}
+	contentstring += "</table>";
+	
 	infowindows[eachstop] = new google.maps.InfoWindow({
-	    content: myLine[eachstop].station
+	    content: contentstring
 	});
 	infoListen(markers[eachstop], infowindows[eachstop]);
     }
-
+/*
     mylat = 42.4137513;
-    mylng = -71.1137399; /*** TEMPORARY ***/
+    mylng = -71.1137399;
     myloc = new google.maps.LatLng(mylat, mylng);
-
-    // Geolocation
+*/
+/*    // Geolocation
     if(navigator.geolocation) {
 	console.log("YES");
 	navigator.geolocation.getCurrentPosition(function(position) {
@@ -97,7 +129,7 @@ function displayAll()
     else {
 	alert("Geolocation not supported");
     }
-
+*/
     /*** TEMPORARY ***/
     memarker = new google.maps.Marker({
 	position: new google.maps.LatLng(mylat, mylng),
@@ -134,11 +166,17 @@ function displayAll()
 	strokeWeight: 2
     });
     closePath.setMap(map);
+    // Make InfoWindow with distance
+    distwindow = new google.maps.InfoWindow({
+	content: "<p>Closest Station: " + myLine[closestInd].station + 
+	    "</p><p>Distance: " + closestDist + " miles </p>"
+    });
+    distwindow.open(memarker.get('map'), memarker);
+    
 }
 
 // For Geolocation
 function showMe() {
-    console.log("Got Here");
     me = new google.maps.LatLng(mylat, mylng);
     map.panTo(me);
     memarker = new google.maps.Marker({
