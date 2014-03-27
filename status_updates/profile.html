@@ -19,11 +19,19 @@
             + mins + " - ";
         wholestat = "<p>" + datestring + message + "</p>";
         stats.innerHTML = wholestat + existing;
+        localStorage.setItem("statuses", stats.innerHTML);
+      }
+      
+      function load_past(){
+        if(localStorage.getItem("statuses")){
+          document.getElementById("status").innerHTML =
+            localStorage.getItem("statuses");
+        }
       }
     </script>
   </head>
   
-  <body>
+  <body onload="load_past()">
     <h1>Fecebook</h1>
     <div id="nav">
       <ul>
