@@ -20,42 +20,42 @@
     </div>
     <div>
       <h3>Abstract of Findings</h3>
-      <p></p>
+      <p>There are several potential security vulnerabilities with this application.  The least serious is mostly a cosmetic concern; if a non-numeric score is provided, <code>NaN</code> will display instead of a number, and this could also cause problems with sorting.  The second issue is more serious.  For this application, Cross-Origin-Resource-Sharing is enabled for all pages, for all origins.  Simply put, this means that anyone with an internet connection can make requests to this application, and they will all be accepted.  This could be taken advantage of for cheating, or for more dangerous uses, like HTML injections.  HTML injections are the most serious security vulnerability that I have been able to identify.  Users can submit code instead of a username, and that code will actually be evaluated on the client machine.  An innocent prank could be changing the color of the username, or generating a popup, but nearly any arbitrary code (likely JavaScript) could be executed.  Although not seperately addressed, this could also leave the database itself vulnerable, if someone was familiar with Mongo.  A final concern (although also not specifically addressed) is the possibility of a Denial-of-Service attack.  Since the database likely has a memory limit, a determined individual could attempt to fill the database, so no further data could be added.</p>
     </div>
     <div>
       <h3>Issues Found</h3>
       <p>
       <ul>
-	<li><em class="issue">Issue: </em></li>
-	<li><em>Location: </em></li>
-	<li><em>Severity: </em></li>
-	<li><em>Description: </em></li>
-	<li><em>Proof: </em></li>
-	<li><em>Resolution: </em></li>
+	<li><em class="issue">Issue:  </em>Requests are allowed from any origin.</li>
+	<li><em>Location:  </em>All pages, but most concerning with <code>POST</code> to <code>/submit.json</code></li>
+	<li><em>Severity:  </em><span class="moderate">Moderate:</span> Although this could be easily used to cheat (post false high scores), this is only truly dangerous if requests are not parsed (See <a href="#HTMLInj">"HTML Injection"</a>).</li>
+	<li><em>Description:  </em>Requests will be accepted from any origin, which is likely intended for the <code>/scores.json</code> page, but is very dangerous with <code>/submit.json</code>.  This vulnerability leaves the application open to anyone with an internet connection.</li>
+	<li><em>Proof:  </em>Each page includes <code>res.header("Access-Control-Allow-Origin", "*");</code></li>
+	<li><em>Resolution:  </em>Instead of allowing <code>*</code>, specify only the pages that are known to access this application and that are known to be safe.</li>
+      </ul>
+      <hr />
+      <ul id="HTMLInj">
+	<li><em class="issue">Issue:  </em>Not-a-Number with bad <code>POST</code> data</li>
+	<li><em>Location:  </em><code>/submit.json</code></li>
+	<li><em>Severity:  </em><span class="low">Low:</span> This will probably not cause any true harm, but will look unprofessional if exploited.</li>
+	<li><em>Description:  </em>Score data that is non-numeric will be parsed to <code>NaN</code>.  This looks bad, and may cause sorting problems.</li>
+	<li><em>Proof:  </em><code>/submit.json</code> includes <code>parseInt(request.body.score)</code>, without first checking the contents.</li>
+	<li><em>Resolution:  </em>A simple conditional can check whether the score is numeric, and reject the data if it fails.  This would prevent bad data from being added to the database.</li>
       </ul>
       <hr />
       <ul>
-	<li><em class="issue">Issue: </em></li>
-	<li><em>Location: </em></li>
-	<li><em>Severity: </em></li>
-	<li><em>Description: </em></li>
-	<li><em>Proof: </em></li>
-	<li><em>Resolution: </em></li>
-      </ul>
-      <hr />
-      <ul>
-	<li><em class="issue">Issue: </em></li>
-	<li><em>Location: </em></li>
-	<li><em>Severity: </em></li>
-	<li><em>Description: </em></li>
-	<li><em>Proof: </em></li>
-	<li><em>Resolution: </em></li>
+	<li><em class="issue">Issue:  </em>HTML Injection</li>
+	<li><em>Location:  </em>All pages</li>
+	<li><em>Severity:  </em><span class="high">High:</span> Although this could be used for a fairly innocent prank, it could just as easily be used maliciously to seriously disrupt application functions.</li>
+	<li><em>Description:  </em>An HTML Injection (which I use as an umbrella for several types of Injection attacks) involves submitting code instead of strings, likely as the username.  Since none of the user input is parsed or checked, this code could be evaluated at various times, including database calls, or client-side display.</li>
+	<li><em>Proof:  </em>No parsing is performed on user input.</li>
+	<li><em>Resolution:  </em>Most kinds of injection attacks can be easily thwarted by parsing user input and removing special characters (especially <code>&lt;</code> <code>&gt;</code> <code>;</code> <code>{</code> <code>}</code>).</li>
       </ul>
       </p>
     </div>
     <div>
       <h3>Conclusion</h3>
-      <p></p>
+      <p>This application contains numerous security vulnerabilities, with a range of severity.  Luckily, fixing these should be easy and inexpensive.  A developer should be able to eliminate (or at least alleviate) each of these problems very quickly, likely in about an hour.</p>
     </div>
   </body>
 </html>

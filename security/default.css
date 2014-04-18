@@ -6,13 +6,32 @@ h2, h3 {
     color: #CC0000;
 }
 
+.low, .moderate, .high {
+    padding: 1px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px;
+}
+
+.low {
+    background-color: #FFFF33;
+}
+
+.moderate {
+    background-color: #FF9933
+}
+
+.high {
+    background-color: #FF0000
+}
+
 a {
     color: #0000AA;
     text-decoration: none;
 }
 
 code {
-    padding: 3px;
+    padding: 1px;
     padding-left: 5px;
     padding-right: 5px;
     border-radius: 5px;
@@ -33,6 +52,10 @@ p {
     border-width: 1px;
 }
 
+li {
+    margin-bottom: 6px;
+}
+
 div {
     background-color: #FFFFFF;
     padding: 1px;
@@ -42,4 +65,10 @@ div {
     border-width: 5px;
     border-bottom-style: solid;
     border-color: #8888BB;
+}
+
+body {
+    padding: 10px;
+    padding-top: 0px;
+    padding-bottom: 30px;
 }
