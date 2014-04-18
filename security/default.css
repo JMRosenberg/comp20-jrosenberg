@@ -1,0 +1,45 @@
+h2, h3 {
+    color: #000055;
+}
+
+.issue {
+    color: #CC0000;
+}
+
+a {
+    color: #0000AA;
+    text-decoration: none;
+}
+
+code {
+    padding: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #AAAAAA;
+    background-color: #DDDDDD;
+}
+
+a:hover {
+    color: #0066FF;
+}
+
+p {
+    padding-left: 15px;
+    border-left-style: solid;
+    border-color: #8888BB;
+    border-width: 1px;
+}
+
+div {
+    background-color: #FFFFFF;
+    padding: 1px;
+    padding-left: 10px;
+    margin: 5px;
+    border-radius: 15px;
+    border-width: 5px;
+    border-bottom-style: solid;
+    border-color: #8888BB;
+}
